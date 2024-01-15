@@ -1,0 +1,82 @@
+[
+    {
+      "id": "1",
+      "title": "Music Festival",
+      "description": "Join us for a weekend of live music featuring various artists.",
+      "date": "2024-02-15",
+      "location": "CityA",
+      "category": "Music"
+    },
+    {
+      "id": "2",
+      "title": "Tech Conference",
+      "description": "Explore the latest in technology and innovation with industry experts.",
+      "date": "2024-03-10",
+      "location": "CityB",
+      "category": "Tech"
+    },
+    {
+      "id": "3",
+      "title": "Food Tasting Event",
+      "description": "Indulge in a culinary experience with a variety of gourmet dishes.",
+      "date": "2024-04-05",
+      "location": "CityC",
+      "category": "Food & Drink"
+    },
+    {
+      "id": "4",
+      "title": "Sports Tournament",
+      "description": "Cheer for your favorite teams in an exciting sports competition.",
+      "date": "2024-05-20",
+      "location": "CityD",
+      "category": "Sports"
+    },
+    {
+      "id": "5",
+      "title": "Art Exhibition",
+      "description": "Discover the beauty of art through a collection of stunning artworks.",
+      "date": "2024-06-15",
+      "location": "CityE",
+      "category": "Art"
+    },
+    {
+      "id": "6",
+      "title": "Comedy Night",
+      "description": "Laugh out loud with stand-up comedians delivering hilarious performances.",
+      "date": "2024-07-10",
+      "location": "CityF",
+      "category": "Comedy"
+    },
+    {
+      "id": "7",
+      "title": "Film Festival",
+      "description": "Experience a showcase of diverse and compelling films from around the world.",
+      "date": "2024-08-25",
+      "location": "CityG",
+      "category": "Film"
+    },
+    {
+      "id": "8",
+      "title": "Science Fair",
+      "description": "Engage in interactive exhibits and demonstrations showcasing scientific advancements.",
+      "date": "2024-09-12",
+      "location": "CityH",
+      "category": "Science"
+    },
+    {
+      "id": "9",
+      "title": "Fashion Show",
+      "description": "Witness the latest trends and designs in the world of fashion.",
+      "date": "2024-10-08",
+      "location": "CityI",
+      "category": "Fashion"
+    },
+    {
+      "id": "10",
+      "title": "Fitness Expo",
+      "description": "Stay active and healthy with fitness demonstrations and wellness workshops.",
+      "date": "2024-11-03",
+      "location": "CityJ",
+      "category": "Fitness"
+    }
+  ]

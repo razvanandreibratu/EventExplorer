@@ -1,0 +1,99 @@
+<div id="app">
+    <h1 class="align-middle">Events Nearby</h1>
+    <p v-for="event in events">
+        <b> {{event.title}}  </b>
+        <button @click="deleteEvent(event.id)">delete</button>
+    </p>
+    <button @click="getData">Refresh Data</button>
+    <br><br>
+    <button class="danger" @click="deleteAllEvents">DELETE ALL DATA</button>
+    
+    <br><br>
+    <div>Title:
+        <input v-model="newEvent.title">
+        Description:
+        <input v-model="newEvent.description">
+        Date:
+        <input v-model="newEvent.date">
+        Category:
+        <input v-model="newEvent.category">
+    </div>
+    <button @click="addEvent">Add Event</button>
+    <br><br><br>
+    <input v-model="searchCriteria">
+    <button @click="getOneEvent">Search Title</button>
+    <p v-for="event in oneEvent">The title you are looking for is: 
+        <b>{{event.title}}</b>
+    </p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.5/axios.min.js" integrity="sha512-TjBzDQIDnc6pWyeM1bhMnDxtWH0QpOXMcVooglXrali/Tj7W569/wd4E8EDjk1CwOAOPSJon1VfcEt1BI4xIrA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script type="module">
+  import { createApp, ref, onMounted, onBeforeMount } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js';
+  const API_URL = "http://localhost:3000";
+
+  createApp({
+    setup() {
+      const events = ref([]);
+      const newEvent = ref({
+            id: "",
+            title: "",
+            description: "",
+            date: "",
+            category: "",
+        });
+      const oneEvent = ref({});
+      const searchCriteria = ref("");
+
+      const getData = async () => {
+        events.value = await axios.get(API_URL + "/events/getEvents").then(
+            (response)=>{
+                return response.data;
+            }
+        );
+      };
+      const getOneEvent = async () => {
+        console.log(searchCriteria.value);
+        oneEvent.value = await axios.get(API_URL + `/events/search/keyword/${searchCriteria.value}`).then(
+            (response)=>{
+                return response.data
+            }
+        );
+        console.log(oneEvent.value);
+      };
+      const addEvent = async () => {
+        await axios.post(API_URL + "/events/create", {newEvent: newEvent.value}).then(
+            (resposne) => {
+                alert(`Added successfuly event: ${newEvent.value.title} with  id ${resposne.data}!`);
+            });
+      };
+
+      const deleteEvent = async (id) => {
+        console.log(id);
+        await axios.delete(API_URL + `/events/delete/${id}`).then(
+            (response) => {
+                return response.data;
+            });
+      };
+      
+      const deleteAllEvents = async () => {
+        await axios.delete(API_URL + 'events/delete').then(
+            (response) => {
+                return response.data;
+            });
+      };
+      
+      return {
+        events,
+        newEvent,
+        getData,
+        addEvent,
+        deleteEvent,
+        searchCriteria,
+        oneEvent,
+        getOneEvent,
+        deleteAllEvents
+      };
+    }
+  }).mount('#app')
+</script>
