@@ -1,8 +1,15 @@
 <div id="app">
     <h1 class="align-middle">Events Nearby</h1>
     <p v-for="event in events">
-        <b> {{event.title}}  </b>
+        <b>Title: {{event.title}} </b>
+        <template v-if="event.description">
+            <div><b>Description:</b> {{event.description}}</div>
+        </template>
+        <template v-if="event.location">
+            <div><b>Location: </b>{{event.location}}</div>
+        </template>
         <button @click="deleteEvent(event.id)">delete</button>
+        <button @click="updateDescription(event.id)">update</button>
     </p>
     <button @click="getData">Refresh Data</button>
     <br><br>
@@ -17,11 +24,15 @@
         <input v-model="newEvent.date">
         Category:
         <input v-model="newEvent.category">
+        Location:
+        <input v-model="newEvent.location">
     </div>
     <button @click="addEvent">Add Event</button>
     <br><br><br>
     <input v-model="searchCriteria">
-    <button @click="getOneEvent">Search Title</button>
+    <button @click="getOneEvent">Search Title by name</button>
+    <input v-model="searchCriteria1">
+    <button @click="getOneEventByNumber">Search Title id</button>
     <p v-for="event in oneEvent">The title you are looking for is: 
         <b>{{event.title}}</b>
     </p>
@@ -40,10 +51,12 @@
             title: "",
             description: "",
             date: "",
+            location: "",
             category: "",
         });
       const oneEvent = ref({});
       const searchCriteria = ref("");
+      const searchCriteria1 = ref("");
 
       const getData = async () => {
         events.value = await axios.get(API_URL + "/events/getEvents").then(
@@ -53,19 +66,27 @@
         );
       };
       const getOneEvent = async () => {
-        console.log(searchCriteria.value);
         oneEvent.value = await axios.get(API_URL + `/events/search/keyword/${searchCriteria.value}`).then(
             (response)=>{
                 return response.data
             }
         );
-        console.log(oneEvent.value);
+        searchCriteria.value = "";
+      };
+      const getOneEventByNumber = async () => {
+        oneEvent.value = await axios.get(API_URL + `/events/search/id/${searchCriteria1.value}`).then(
+            (response)=>{
+                return response.data
+            }
+        );
+        searchCriteria1.value = "";
       };
       const addEvent = async () => {
         await axios.post(API_URL + "/events/create", {newEvent: newEvent.value}).then(
             (resposne) => {
                 alert(`Added successfuly event: ${newEvent.value.title} with  id ${resposne.data}!`);
             });
+        newEvent.value = {};
       };
 
       const deleteEvent = async (id) => {
@@ -83,6 +104,10 @@
             });
       };
       
+      const updateDescription = async (id) => {
+        console.log(id);
+      };
+
       return {
         events,
         newEvent,
@@ -92,7 +117,10 @@
         searchCriteria,
         oneEvent,
         getOneEvent,
-        deleteAllEvents
+        deleteAllEvents,
+        getOneEventByNumber,
+        searchCriteria1,
+        updateDescription
       };
     }
   }).mount('#app')

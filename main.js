@@ -50,7 +50,7 @@ app.get('/events/search/keyword/:keyword', async (req, res) => {
 
 //post methods
 app.post('/events/create', async (req, res) => {
-  const { title, description, date, category } = req.body.newEvent;
+  const { title, description, date, category, location } = req.body.newEvent;
   const entries = await db.collection('events').find({}).toArray((error, result)=> {
     return result;
   });
@@ -60,6 +60,7 @@ app.post('/events/create', async (req, res) => {
     title: title,
     description: description,
     date: date,
+    location: location,
     category: category
   });
   res.send(id);
