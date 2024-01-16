@@ -82,10 +82,12 @@
         searchCriteria1.value = "";
       };
       const addEvent = async () => {
-        await axios.post(API_URL + "/events/create", {newEvent: newEvent.value}).then(
+        const newValue = await axios.post(API_URL + "/events/create", {newEvent: newEvent.value}).then(
             (resposne) => {
-                alert(`Added successfuly event: ${newEvent.value.title} with  id ${resposne.data}!`);
+                alert(`Added successfuly event: ${newEvent.value.title} with  id ${resposne.data.id}!`);
+                return resposne;
             });
+        events.value.push(newValue.data);
         newEvent.value = {};
       };
 
@@ -95,6 +97,7 @@
             (response) => {
                 return response.data;
             });
+        events.value = events.value.filter(event => event.id !== id);
       };
       
       const deleteAllEvents = async () => {

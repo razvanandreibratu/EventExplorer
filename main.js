@@ -63,11 +63,12 @@ app.post('/events/create', async (req, res) => {
     location: location,
     category: category
   });
-  res.send(id);
+  res.json({id, title, description, date, category, location});
+  // res.send({id, title, description, date, category, location});
 });
 
 //update methods
-app.put('/events/update', async (req, res) => {
+app.put('/events/update/:description/:id', async (req, res) => {
   const { id, description } = req.params;
   const updateEvent = {
     $set: {
