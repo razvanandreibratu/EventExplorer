@@ -28,7 +28,7 @@ app.get('/events/getEvents', async (req, res) => {
   const result = await db.collection('events').find({}).toArray((error, result)=> {
     return result;
   });
-  res.send(result);
+  res.json(result).status(200);
 });
 //get by id
 app.get('/events/search/id/:id', async (req, res) => {
@@ -45,7 +45,7 @@ app.get('/events/search/keyword/:keyword', async (req, res) => {
   const result = await db.collection('events').find({title: { $regex: regex }}).toArray((error, result)=> {
     return result;
   });
-  res.send(result);
+  res.send(result).status(200);
 });
 
 //post methods
@@ -63,7 +63,7 @@ app.post('/events/create', async (req, res) => {
     location: location,
     category: category
   });
-  res.json({id, title, description, date, category, location});
+  res.json({id, title, description, date, category, location}).status(200);
   // res.send({id, title, description, date, category, location});
 });
 
@@ -76,7 +76,7 @@ app.put('/events/update/:description/:id', async (req, res) => {
     },
   };
   await db.collection('events').updateOne({id: id}, updateEvent);
-  res.send(id);
+  res.send(id).status(200);
 });
 
 //delete methods
