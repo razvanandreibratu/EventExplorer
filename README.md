@@ -103,5 +103,3 @@ Provides personalized event recommendations based on user preferences and past a
 ## Usage Scenario
 
 Imagine you want to find exciting concerts happening in your city this weekend. You can simply send a GET request to `/events/search` with parameters like `q=concert`, `location=CityName`, and `date=2024-01-20`.
-
-Keep in mind that this is just a basic idea, and the actual implementation may require further considerations, such as error handling, pagination for large result sets, and securing the API with proper authentication mechanisms.
