@@ -82,7 +82,7 @@
         searchCriteria1.value = "";
       };
       const addEvent = async () => {
-        const newValue = await axios.post(API_URL + "/events/create", {newEvent: newEvent.value}).then(
+        const newValue = await axios.post(API_URL + "/events/create/elastic", {newEvent: newEvent.value}).then(
             (resposne) => {
                 alert(`Added successfuly event: ${newEvent.value.title} with  id ${resposne.data.id}!`);
                 return resposne;

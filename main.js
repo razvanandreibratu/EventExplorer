@@ -2,11 +2,29 @@ import express from "express";
 import { MongoClient, ServerApiVersion } from "mongodb";
 import dotenv from "dotenv";
 import cors from "cors";
+import { Client } from "@elastic/elasticsearch";
 
 dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(cors());
+
+//elastic connection
+const elasticClient = new Client({
+  node: 'https://8bc5d3d8fe884626b3fbdb6e3a4a88da.us-central1.gcp.cloud.es.io:443',
+  auth: {
+      apiKey: process.env.API_KEY
+  }
+});
+const resp = await elasticClient.info();
+console.log(resp);
+// Let's search!
+// const createIndex = async (indexName) => {
+//   await elasticClient.indices.create({ index: indexName });
+//   console.log("Index created");
+// };
+
+// createIndex("events");
 
 //constants
 const port = process.env.PORT;
@@ -38,8 +56,8 @@ app.get('/events/search/id/:id', async (req, res) => {
   });
   res.send(result);
 });
-// get by title
-app.get('/events/search/keyword/:keyword', async (req, res) => {
+// get by title from mongodb
+app.get('/events/search/keyword1/:keyword', async (req, res) => {
   const keyword = req.params.keyword;
   const regex = new RegExp(keyword, 'i');
   const result = await db.collection('events').find({title: { $regex: regex }}).toArray((error, result)=> {
@@ -47,8 +65,43 @@ app.get('/events/search/keyword/:keyword', async (req, res) => {
   });
   res.send(result).status(200);
 });
-
+//get by tile elastic 
+app.get('/events/search/keyword/:keyword', async (req, res) => {
+  let result = null;
+  try {
+    result = await elasticClient.search({
+      index: "posts",
+      query: { fuzzy: { title: req.params.keyword } },
+    });
+  } catch (e) {
+    console.log(e)
+    res.sendStatus(500);
+  }
+  console.log(result.hits[0]);
+  res.send(result).status(200);
+});
 //post methods
+//post with elastic
+app.post("/events/create/elastic", async (req, res) => {
+  let result = null;
+  try {
+    result = await elasticClient.index({
+      index: "posts",
+      document: {
+        title: req.body.newEvent.title,
+        description: req.body.newEvent.description,
+        date: req.body.newEvent.date,
+        location: req.body.newEvent.location,
+        category: req.body.newEvent.category
+      },
+    });
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
+  res.send(result);
+});
+
 app.post('/events/create', async (req, res) => {
   const { title, description, date, category, location } = req.body.newEvent;
   const entries = await db.collection('events').find({}).toArray((error, result)=> {
@@ -64,7 +117,6 @@ app.post('/events/create', async (req, res) => {
     category: category
   });
   res.json({id, title, description, date, category, location}).status(200);
-  // res.send({id, title, description, date, category, location});
 });
 
 //update methods
